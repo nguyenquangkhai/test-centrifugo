@@ -8,6 +8,12 @@
   <div id="counter">-</div>
   <script src="https://unpkg.com/centrifuge@3.1.0/dist/centrifuge.js"></script>
   <script type="text/javascript">
+    function appendText(text){
+        const node = document.createElement("div");
+        const textnode = document.createTextNode(text);
+        node.appendChild(textnode);
+        document.getElementById("counter").appendChild(node);
+    }
     const container = document.getElementById('counter');
 
     const centrifuge = new Centrifuge("ws://localhost:8000/connection/websocket", {
@@ -26,8 +32,7 @@
 
     sub.on('publication', function (ctx) {
         console.log("received publication from a channel", ctx.data);
-      container.innerHTML = ctx.data.value;
-      document.title = ctx.data.value;
+        appendText(ctx.data.text);
     }).on('subscribing', function (ctx) {
       console.log(`subscribing: ${ctx.code}, ${ctx.reason}`);
     }).on('subscribed', function (ctx) {

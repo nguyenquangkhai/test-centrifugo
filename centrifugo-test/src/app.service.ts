@@ -5,6 +5,7 @@ import {
   CentrifugoApiServiceService,
   PublishResponse,
 } from './centrifugo.interface';
+import { PublishDto } from './centrifugo.dto';
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -18,13 +19,15 @@ export class AppService implements OnModuleInit {
     this.centrifugoApiService = this.client.getService('CentrifugoApi');
   }
 
-  publish(): Observable<PublishResponse> {
-    console.log(this.centrifugoApiService);
+  publish(publishDto: PublishDto): Observable<PublishResponse> {
+    const data = {
+      text: publishDto.text,
+    };
+    const b64Data = Buffer.from(JSON.stringify(data)).toString('base64');
     const publishResponse = this.centrifugoApiService.Publish({
-      channel: '1',
-      data: 'eyAidGV4dCI6ICJoZWxsbyBmcm9tIG5lc3QiIH0=',
+      channel: publishDto.channel,
+      data: b64Data,
     });
-    console.log(publishResponse);
     return publishResponse;
   }
 }
